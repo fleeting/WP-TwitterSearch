@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/143826/wp-twittersearch/trunk/lib/Arc90/Service/Twitter
+END
+Exception.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/!svn/ver/143114/wp-twittersearch/trunk/lib/Arc90/Service/Twitter/Exception.php
+END
+Response.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/!svn/ver/143114/wp-twittersearch/trunk/lib/Arc90/Service/Twitter/Response.php
+END
+Search.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/!svn/ver/152403/wp-twittersearch/trunk/lib/Arc90/Service/Twitter/Search.php
+END
