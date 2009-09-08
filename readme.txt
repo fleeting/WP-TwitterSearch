@@ -66,6 +66,12 @@ Good, you can either email me at james.fleeting[at]gmail.com or post in the word
 
 == Change Log ==
 
+= v1.5.5 =
+* Released: 9/8/2009
+* Fixed problem when excluding multiple words
+* Fixed empty xml error if twitter returns nothing
+* Display message instead of xml errors
+
 = v1.5.4 =
 * Released: 9/5/2009
 * Added Exclude Search Terms
