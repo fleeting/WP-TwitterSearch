@@ -441,10 +441,11 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
       $search_lang = get_option('wptwittersearch_lang');
     }
     
-    $search_terms = str_replace('#', '%23', $search_terms);
-    $search_terms = str_replace('"', '%22', $search_terms);
-    $search_terms = str_replace(' ', '+OR+', $search_terms);
+    $search_terms  = str_replace('#', '%23', $search_terms);
+    $search_terms  = str_replace('"', '%22', $search_terms);
+    $search_terms  = str_replace(' ', '+OR+', $search_terms);
     $search_phrase = str_replace(' ', '+', $search_phrase);
+    $exclude_terms = str_replace(' ', '+', $exclude_terms);
     
     //SimpleXML load results feed
     $twitter_results = simplexml_load_file(WP_CONTENT_URL.'/plugins/wp-twittersearch/search-feed.php?q='.$search_terms.'&phrase='.$search_phrase.'&nots='.$exclude_terms.'&from='.$search_person.'&lang='.$search_lang.'&rpp='.$limit_tweets);
