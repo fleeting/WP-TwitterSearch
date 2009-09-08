@@ -448,14 +448,20 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
     $exclude_terms = str_replace(' ', '+', $exclude_terms);
     
     //SimpleXML load results feed
-    libxml_use_internal_errors(true);
+    //libxml_use_internal_errors(true);
     
     $twitter_results = simplexml_load_file(WP_CONTENT_URL.'/plugins/wp-twittersearch/search-feed.php?q='.$search_terms.'&phrase='.$search_phrase.'&nots='.$exclude_terms.'&from='.$search_person.'&lang='.$search_lang.'&rpp='.$limit_tweets);
     
     //print_r($twitter_results->entry);
             
     // Loop the resulting Twitter Search data
-    if (count($twitter_results->entry) > 0) {
+    if (!$twitter_results) {
+      $errors = libxml_get_errors(); ?>
+
+        <p>There was a problem retrieving tweets from Twitter. Please refresh to try again.</p>
+
+      <?php libxml_clear_errors();
+    } else {
       foreach($twitter_results->entry as $tweet){
             
         preg_match('/([a-z0-9]+) \(([a-z0-9\s]+)\)/i', $tweet->author->name, $names);
