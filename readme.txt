@@ -4,7 +4,7 @@ Donate link: http://paperkilledrock.com/projects
 Tags: twitter, search, widget
 Requires at least: 2.7
 Tested up to: 2.8.4
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 
 Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown.
 
