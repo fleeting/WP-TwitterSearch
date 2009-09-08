@@ -14,11 +14,25 @@ if (isset($_GET['q']) && $_GET['q'] != '') {
 	$q = $_GET['q'];
 }
 
-$phrase = $_GET['phrase'];
-$from   = $_GET['from'];
-$lang   = $_GET['lang'];
-$nots   = $_GET['nots'];
-$rpp    = $_GET['rpp'];
+if (isset($_GET['phrase']) && $_GET['phrase'] != '') {
+	$phrase = $_GET['phrase'];
+}
+
+if (isset($_GET['from']) && $_GET['from'] != '') {
+	$from   = $_GET['from'];
+}
+
+if (isset($_GET['lang']) && $_GET['lang'] != '') {
+	$lang   = $_GET['lang'];
+}
+
+if (isset($_GET['nots']) && $_GET['nots'] != '') {
+	$nots   = $_GET['nots'];
+}
+
+if (isset($_GET['rpp']) && $_GET['rpp'] != '') {
+	$rpp    = $_GET['rpp'];
+}
 
 // Search Twitter API Request
 $response = $twitter->searchAPI('ATOM');

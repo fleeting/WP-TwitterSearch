@@ -448,34 +448,39 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
     $exclude_terms = str_replace(' ', '+', $exclude_terms);
     
     //SimpleXML load results feed
+    libxml_use_internal_errors(true);
     $twitter_results = simplexml_load_file(WP_CONTENT_URL.'/plugins/wp-twittersearch/search-feed.php?q='.$search_terms.'&phrase='.$search_phrase.'&nots='.$exclude_terms.'&from='.$search_person.'&lang='.$search_lang.'&rpp='.$limit_tweets);
+    
+    //print_r($twitter_results->entry);
             
     // Loop the resulting Twitter Search data
-    foreach($twitter_results->entry as $tweet){
+    if (count($twitter_results->entry) > 0) {
+      foreach($twitter_results->entry as $tweet){
             
-      preg_match('/([a-z0-9]+) \(([a-z0-9\s]+)\)/i', $tweet->author->name, $names);
-      list($original_names, $twitter_name, $display_name) = $names;
-      //echo $twitter_name . '-' . $display_name;
-      $tweet_date = date(get_option('wptwittersearch_dateformat'), strtotime($tweet->published));
+        preg_match('/([a-z0-9]+) \(([a-z0-9\s]+)\)/i', $tweet->author->name, $names);
+        list($original_names, $twitter_name, $display_name) = $names;
+        //echo $twitter_name . '-' . $display_name;
+        $tweet_date = date(get_option('wptwittersearch_dateformat'), strtotime($tweet->published));
     	
-    	echo '<div class="tweet">';
-    		if (get_option('wptwittersearch_avatar') == '1') {
-    		  echo '<div class="avatar_border"><a href="'.$tweet->author->uri.'"><img style="width:48px;height:48px;" class="avatar" src="'.$tweet->link[1]['href'].'" /></a></div>';
-    		}
+      	echo '<div class="tweet">';
+      		if (get_option('wptwittersearch_avatar') == '1') {
+      		  echo '<div class="avatar_border"><a href="'.$tweet->author->uri.'"><img style="width:48px;height:48px;" class="avatar" src="'.$tweet->link[1]['href'].'" /></a></div>';
+      		}
 
-    		if (get_option('wptwittersearch_name') == '1') {
-    		  echo '<h4><a href="'.$tweet->author->uri.'">'.$display_name.'</a></h4>';
-    		} else {
-    		  echo '<h4>@<a href="'.$tweet->author->uri.'">'.$twitter_name.'</a></h4>';
-    		}
+      		if (get_option('wptwittersearch_name') == '1') {
+      		  echo '<h4><a href="'.$tweet->author->uri.'">'.$display_name.'</a></h4>';
+      		} else {
+      		  echo '<h4>@<a href="'.$tweet->author->uri.'">'.$twitter_name.'</a></h4>';
+      		}
 
-    		echo '<p>'.$tweet->content;
-    		if (get_option('wptwittersearch_date') == '1') {
-    		  echo ' <span class="tweet_date"><a href="'.$tweet->link[0]['href'].'">'.$tweet_date.'</a></span>';
-    		}
-    		echo '</p>';
-    	echo '</div>';
-    }
+      		echo '<p>'.$tweet->content;
+      		if (get_option('wptwittersearch_date') == '1') {
+      		  echo ' <span class="tweet_date"><a href="'.$tweet->link[0]['href'].'">'.$tweet_date.'</a></span>';
+      		}
+      		echo '</p>';
+      	echo '</div>';
+      }
+    } //if results
     //share the love man...
     if (get_option('wptwittersearch_linklove') == '1') {
       echo '<p class="wpts-linklove">Powered by <a href="' . WPTS_PLUGIN_URL .'">WP-TwitterSearch</a></p>';
