@@ -4,7 +4,7 @@ Donate link: http://paperkilledrock.com/projects
 Tags: twitter, search, widget
 Requires at least: 2.7
 Tested up to: 2.8.4
-Stable tag: 1.5.6
+Stable tag: 1.6
 
 Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown.
 
@@ -67,9 +67,11 @@ Good, you can either email me at james.fleeting[at]gmail.com or post in the word
 == Change Log ==
 
 = v1.6 =
-* Released: ?/?/2009
+* Released: 9/18/2009
 * Updated to use WP 2.7+ register_settings
 * Plugin menu is now located under 'Settings'
+* Removed Top Level Menu and About page
+* The plugin is now a class so it will play well with others
 
 = v1.5.5 =
 * Released: 9/8/2009

@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: WP-TwitterSearch
-Version: 1.5.6
+Version: 1.6
 Plugin URI: http://paperkilledrock.com/projects/WP-TwitterSearch
 Description: Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown. Add the widget to your sidebar, use <code>&lt;?php wp_twittersearch_feed(); ?&gt;</code> in your template or the shortcode in your posts or pages: [wpts terms=twittersearch limit=5 lang=en].
 Author: James Fleeting
@@ -26,7 +26,7 @@ Author URI: http://jamesfleeting.com/
 */
 
 //lets go ahead and define a few things for easy updating...
-define(WPTS_CURRENT_VERSION, "1.5.6");
+define(WPTS_CURRENT_VERSION, "1.6");
 define(WPTS_PLUGIN_URL, "http://paperkilledrock.com/projects/WP-TwitterSearch");
 global $wp_version;
 
@@ -328,30 +328,6 @@ class WPTwitterSearch {
 
 <?php   
   } //wp_twitter_search_settings
-
-  //about wptwittersearch plugin
-  function wp_twitter_search_about() {
-?>
-    <div class="wrap">
-      <h2>WP-TwitterSearch About</h2>
-        <p>WP-TwitterSearch gives you an easy way to display twitter search results based on defined keywords. You are currently able to use the template code: <code>&lt;?php wp_twittersearch_feed(); ?&gt;</code> anywhere in your template files to display the results. You can also use the widget or the shortcode in your posts and pages: [wpts terms=twittersearch limit=5 lang=en].</p>
-        
-        <p>The template tag, short code, and widget can each have their own search terms and limit. Currently the options for avatar, date and date format are general settings. Meaning what is under WP-TwitterSearch Settings will apply to all three methods of using the plugin. These options could be expanded on in the future to allow each their own complete settings.</p>
-        
-      <h3>TODO</h3>
-        <ul style="list-style:square inside;padding:0 0 0 15px">
-          <li>Add the remaining Twitter Advanced Search options <em>[v1.7]</em></li>
-          <li>Allow for multiple widgets each with its own options <em>[v1.6]</em></li>
-          <li>Location based search (input a zipcode and distance) <em>[v1.6]</em></li>
-          <li>Add a button to the Visual Editor to add a shortcode <em>[v?]</em></li>
-          <li>Display results from a username and tags from a post <em>[v2.0]</em></li>
-          <li>Cache the result for a period of time? <em>[v?]</em></li>
-        </ul>
-          
-        <p>Current Version: v<?php echo WPTS_CURRENT_VERSION; ?> | Developed by: <a href="http://jamesfleeting.com">James Fleeting</a> | 
-          Latest version and docs can be found at <a href="<?php echo WPTS_PLUGIN_URL; ?>">paperkilledrock.com</a>.</p>
-    </div>
-<?php } //wp_twitter_search_credits
   
   //lets handle the shortcode
   function  wp_twittersearch_shortcode($atts = null) {
