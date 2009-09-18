@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: WP-TwitterSearch
-Version: 1.5.5
+Version: 1.5.6
 Plugin URI: http://paperkilledrock.com/projects/WP-TwitterSearch
 Description: Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown. Add the widget to your sidebar, use <code>&lt;?php wp_twittersearch_feed(); ?&gt;</code> in your template or the shortcode in your posts or pages: [wpts terms=twittersearch limit=5 lang=en].
 Author: James Fleeting
@@ -26,72 +26,70 @@ Author URI: http://jamesfleeting.com/
 */
 
 //lets go ahead and define a few things for easy updating...
-define(WPTS_CURRENT_VERSION, "1.5.5");
+define(WPTS_CURRENT_VERSION, "1.5.6");
 define(WPTS_PLUGIN_URL, "http://paperkilledrock.com/projects/WP-TwitterSearch");
 global $wp_version;
 
-//guess we should add some wordpress hooks and actions
-register_activation_hook(__FILE__,'set_wptwittersearch_settings');
-register_deactivation_hook(__FILE__,'unset_wptwittersearch_settings');
-add_action('admin_menu', 'wp_twitter_search_menu');
-add_action('wp_dashboard_setup', 'add_wptwittersearch_dashboard_widgets' );
-add_action("plugins_loaded", "wp_twitter_search_widget_init");
-add_shortcode('wpts', 'wp_twittersearch_shortcode');  
-add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
+class WPTwitterSearch {
+  
+  function WPTwitterSearch() {
+    //guess we should add some wordpress hooks and actions
+    add_action('admin_init', array(&$this, 'register_wptwittersearch_settings'));
+    register_deactivation_hook(__FILE__, array(&$this, 'unregister_wptwittersearch_settings'));
+    add_action('admin_menu', array(&$this, 'wp_twitter_search_menu'));
+    add_action('wp_dashboard_setup', array(&$this, 'add_wptwittersearch_dashboard_widgets'));
+    add_action('plugins_loaded', array(&$this, 'wp_twitter_search_widget_init'));
+    add_shortcode('wpts', array(&$this, 'wp_twittersearch_shortcode'));  
+  }
 
-  //on plugin activation create options in db
-  function set_wptwittersearch_settings() {
-    //add options to wp_options -> defaults
-    add_option('wptwittersearch_limit', '5');
-    add_option('wptwittersearch_terms', 'wordpress plugins');
-    add_option('wptwittersearch_phrase', '');
-    add_option('wptwittersearch_nots', '');
-    add_option('wptwittersearch_author', '');
-    add_option('wptwittersearch_avatar', '1');
-    add_option('wptwittersearch_date', '1');
-    add_option('wptwittersearch_dateformat', 'm/d/y g:ia');
-    add_option('wptwittersearch_lang', 'all');
-    add_option('wptwittersearch_name', '1');
-    add_option('wptwittersearch_linklove', '0');
+  function register_wptwittersearch_settings() { // whitelist options
+    register_setting( 'wpts-group', 'wptwittersearch_limit' );
+    register_setting( 'wpts-group', 'wptwittersearch_terms' );
+    register_setting( 'wpts-group', 'wptwittersearch_phrase' );
+    register_setting( 'wpts-group', 'wptwittersearch_nots' );
+    register_setting( 'wpts-group', 'wptwittersearch_author' );
+    register_setting( 'wpts-group', 'wptwittersearch_avatar' );
+    register_setting( 'wpts-group', 'wptwittersearch_date' );
+    register_setting( 'wpts-group', 'wptwittersearch_dateformat' );
+    register_setting( 'wpts-group', 'wptwittersearch_lang' );
+    register_setting( 'wpts-group', 'wptwittersearch_name' );
+    register_setting( 'wpts-group', 'wptwittersearch_linklove' );
   }
   
-  //on plugin deactivation delete options from db
-  function unset_wptwittersearch_settings() {
-    delete_option('wptwittersearch_limit');
-    delete_option('wptwittersearch_terms');
-    delete_option('wptwittersearch_phrase');
-    delete_option('wptwittersearch_nots');
-    delete_option('wptwittersearch_author');
-    delete_option('wptwittersearch_avatar');
-    delete_option('wptwittersearch_date');
-    delete_option('wptwittersearch_dateformat');
-    delete_option('wptwittersearch_lang');
-    delete_option('wptwittersearch_name');
-    delete_option('wptwittersearch_linklove');
+  function unregister_wptwittersearch_settings() { // whitelist options
+    unregister_setting( 'wpts-group', 'wptwittersearch_limit' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_terms' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_phrase' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_nots' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_author' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_avatar' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_date' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_dateformat' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_lang' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_name' );
+    unregister_setting( 'wpts-group', 'wptwittersearch_linklove' );
   }
   
   //create menu items
-  function wp_twitter_search_menu() {
-    add_menu_page('WP-TwitterSearch Settings', 'TwitterSearch', 8, __FILE__, 'wp_twitter_search_settings', plugins_url('wp-twittersearch/wptwittersearch_18.png'));
-    add_submenu_page(__FILE__, 'WP-TwitterSearch -> Settings', 'Settings', 8, __FILE__, 'wp_twitter_search_settings');
-    add_submenu_page(__FILE__, 'WP-TwitterSearch -> About', 'About', 8, 'wp-twitter-search-about.php', 'wp_twitter_search_about');
+  function wp_twitter_search_menu() {  
+    add_options_page('WP-TwitterSearch Settings', 'TwitterSearch', 8, 'wptwittersearch', array(&$this, 'wp_twitter_search_settings'));
   }
   
   //create dashboard widgets
   function add_wptwittersearch_dashboard_widgets() {
-    wp_add_dashboard_widget('wptwittersearch', 'WP-TwitterSearch', 'wp_twitter_search_dashboard', $control_callback = null);
+    wp_add_dashboard_widget('wptwittersearch', 'WP-TwitterSearch', array(&$this, 'wp_twitter_search_dashboard'), $control_callback = null);
   } //add_wptwittersearch_dashboard_widgets
   
   //search dashboard widget
   function wp_twitter_search_dashboard() {
-    echo wp_twittersearch_feed();
+    echo $this->wp_twittersearch_feed();
     echo '<span class="wpts_linklove">Powered by <a href="' . WPTS_PLUGIN_URL . '">WP-TwitterSearch</a></span>';
   } //wp_twitter_search_dashboard
   
   //register sidebar widget
   function wp_twitter_search_widget_init() {
-    wp_register_sidebar_widget(wptwittersearch_widget, 'TwitterSearch', 'wp_twitter_search_widget', array('description' => __('Add TwitterSearch To Your Sidebar.')) );
-    wp_register_widget_control(wptwittersearch_widget, __('WP TwitterSearch'), 'widget_twitter_search_control');
+    wp_register_sidebar_widget(wptwittersearch_widget, 'TwitterSearch', array(&$this, 'wp_twitter_search_widget'), array('description' => __('Add TwitterSearch To Your Sidebar.')) );
+    wp_register_widget_control(wptwittersearch_widget, __('WP TwitterSearch'), array(&$this, 'widget_twitter_search_control'));
   } // wp_twitter_search_widget_init
   
   //the sidebar widget - SINGLE
@@ -161,25 +159,8 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
     <?php
   } //widget_twitter_search_control
   
-  
-  function set_twittersearch_meta($links, $file) {
-  	$plugin = plugin_basename(__FILE__);
-  	// create link
-  	if ($file == $plugin) {
-  		return array_merge(
-  			$links,
-  			array( sprintf( '<a href="options-general.php?page=%s">%s</a>', $plugin, __('Settings') ) )
-  		);
-  	}
-  	return $links;
-  }
-
   //user defined options (values are stored in database in wp_options)
   function wp_twitter_search_settings() {
-    // If updated options were saved.
-    if ( isset($_GET['updated']) ) {
-      echo '<div id="message" class="updated fade"><p>Settings Saved!</p></div>';
-    }
 ?>
     <style>
       .search {
@@ -242,7 +223,7 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
         
         <form method="post" action="options.php">
         <?php wp_nonce_field('update-options'); ?>
-
+        <?php settings_fields('wpts-group'); ?>
           <table class="form-table">
             <tr valign="top">
               <th scope="row">Search Terms</th>
@@ -335,14 +316,13 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
           </table>
 
           <input type="hidden" name="action" value="update" />
-          <input type="hidden" name="page_options" value="wptwittersearch_terms,wptwittersearch_phrase,wptwittersearch_nots,wptwittersearch_author,wptwittersearch_limit,wptwittersearch_avatar,wptwittersearch_name,wptwittersearch_date,wptwittersearch_dateformat,wptwittersearch_lang,wptwittersearch_linklove" />
 
           <p class="submit">
             <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
           </p>
         </form>
         <h2>Search Preview</h2>
-          <span><?php echo wp_twittersearch_feed(); ?></span>
+          <span><?php echo $this->wp_twittersearch_feed(); ?></span>
           <p><a href="?page=<?php echo plugin_basename(__FILE__); ?>" class="button">Refresh Feed</a></p>
     </div>
 
@@ -493,4 +473,8 @@ add_filter( 'plugin_row_meta', 'set_twittersearch_meta', 10, 2 );
       echo '<p class="wpts-linklove">Powered by <a href="' . WPTS_PLUGIN_URL .'">WP-TwitterSearch</a></p>';
     }
   } //wp_twittersearch_feed
+  
+} //WPTwitterSearch
+
+$wpTwitterSearch = new WPTwitterSearch;
 ?>
