@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: WP-TwitterSearch
-Version: 1.6
+Version: 1.6.1
 Plugin URI: http://paperkilledrock.com/projects/WP-TwitterSearch
 Description: Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown. Add the widget to your sidebar, use <code>&lt;?php wp_twittersearch_feed(); ?&gt;</code> in your template or the shortcode in your posts or pages: [wpts terms=twittersearch limit=5 lang=en].
 Author: James Fleeting
@@ -26,7 +26,7 @@ Author URI: http://jamesfleeting.com/
 */
 
 //lets go ahead and define a few things for easy updating...
-define(WPTS_CURRENT_VERSION, "1.6");
+define(WPTS_CURRENT_VERSION, "1.6.1");
 define(WPTS_PLUGIN_URL, "http://paperkilledrock.com/projects/WP-TwitterSearch");
 global $wp_version;
 
@@ -82,7 +82,7 @@ class WPTwitterSearch {
   
   //search dashboard widget
   function wp_twitter_search_dashboard() {
-    echo $this->wp_twittersearch_feed();
+    echo $this->get_wp_twittersearch_feed();
     echo '<span class="wpts_linklove">Powered by <a href="' . WPTS_PLUGIN_URL . '">WP-TwitterSearch</a></span>';
   } //wp_twitter_search_dashboard
   
@@ -105,7 +105,7 @@ class WPTwitterSearch {
     if ($wpts_widget_title) {
      echo $args['before_title'] . $wpts_widget_title . $args['after_title']; 
     }
-    wp_twittersearch_feed($wpts_widget_terms, $wpts_widget_limit, $wpts_widget_nots);
+    $this->get_wp_twittersearch_feed($wpts_widget_terms, $wpts_widget_limit, $wpts_widget_nots);
     echo $after_widget;
   } //wp_twitter_search_widget
   
@@ -322,7 +322,7 @@ class WPTwitterSearch {
           </p>
         </form>
         <h2>Search Preview</h2>
-          <span><?php echo $this->wp_twittersearch_feed(); ?></span>
+          <span><?php echo $this->get_wp_twittersearch_feed(); ?></span>
           <p><a href="?page=<?php echo plugin_basename(__FILE__); ?>" class="button">Refresh Feed</a></p>
     </div>
 
@@ -337,11 +337,11 @@ class WPTwitterSearch {
       "lang"  => get_option('wptwittersearch_lang'),
       //"date"  => true,
       ), $atts));
-      wp_twittersearch_feed($terms, $limit, $lang);
+      $this->get_wp_twittersearch_feed($terms, $limit, $lang);
   } //wp_twittersearch_shortcode
   
   // The heart of the plugin.
-  function wp_twittersearch_feed($terms = null, $limit = null, $lang = null, $exclude = null) {
+  function get_wp_twittersearch_feed($terms = null, $limit = null, $lang = null, $exclude = null) {
     
     //figure out the search terms
     if (isset($_GET['search_terms']) && $_GET['search_terms'] != '') {
@@ -448,9 +448,15 @@ class WPTwitterSearch {
     if (get_option('wptwittersearch_linklove') == '1') {
       echo '<p class="wpts-linklove">Powered by <a href="' . WPTS_PLUGIN_URL .'">WP-TwitterSearch</a></p>';
     }
-  } //wp_twittersearch_feed
+  } //get_wp_twittersearch_feed
   
 } //WPTwitterSearch
 
 $wpTwitterSearch = new WPTwitterSearch;
+
+function wp_twittersearch_feed() {
+  global $wpTwitterSearch;
+  $wpTwitterSearch->get_wp_twittersearch_feed();
+}
+
 ?>

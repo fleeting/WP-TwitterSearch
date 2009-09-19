@@ -4,7 +4,7 @@ Donate link: http://paperkilledrock.com/projects
 Tags: twitter, search, widget
 Requires at least: 2.7
 Tested up to: 2.8.4
-Stable tag: 1.6
+Stable tag: 1.6.1
 
 Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown.
 
@@ -65,6 +65,11 @@ Good, you can either email me at james.fleeting[at]gmail.com or post in the word
 1. Should the tweets display in an unordered list? divs/spans? Should you be able to choose?
 
 == Change Log ==
+
+= v1.6.1 =
+* Released: 9/18/2009
+* Fixed fatal error on template tag
+* Other Fixes over looked on last changes
 
 = v1.6 =
 * Released: 9/18/2009
