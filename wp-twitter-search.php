@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: WP-TwitterSearch
-Version: 1.6.1
+Version: 1.6.2
 Plugin URI: http://paperkilledrock.com/projects/WP-TwitterSearch
 Description: Displays the latest results based on a twitter search. Options include setting multiple search terms and limiting tweets shown. Add the widget to your sidebar, use <code>&lt;?php wp_twittersearch_feed(); ?&gt;</code> in your template or the shortcode in your posts or pages: [wpts terms=twittersearch limit=5 lang=en].
 Author: James Fleeting
@@ -26,7 +26,7 @@ Author URI: http://jamesfleeting.com/
 */
 
 //lets go ahead and define a few things for easy updating...
-define(WPTS_CURRENT_VERSION, "1.6.1");
+define(WPTS_CURRENT_VERSION, "1.6.2");
 define(WPTS_PLUGIN_URL, "http://paperkilledrock.com/projects/WP-TwitterSearch");
 global $wp_version;
 
@@ -431,7 +431,11 @@ class WPTwitterSearch {
       		}
 
       		if (get_option('wptwittersearch_name') == '1') {
-      		  echo '<h4><a href="'.$tweet->author->uri.'">'.$display_name.'</a></h4>';
+			  if (empty($display_name)) {
+				echo '<h4>@<a href="'.$tweet->author->uri.'">'.$twitter_name.'</a></h4>';
+			  } else {
+      		  	echo '<h4><a href="'.$tweet->author->uri.'">'.$display_name.'</a></h4>';
+			  }
       		} else {
       		  echo '<h4>@<a href="'.$tweet->author->uri.'">'.$twitter_name.'</a></h4>';
       		}
